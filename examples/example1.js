@@ -1,3 +1,16 @@
 var kabin = require('kabin');
-var db = new kabin.Raw({path: "test"});
-var db2 = new kabin.JSON({path: "test"});
+var raw = new kabin.Raw({path: "data"});
+var db = new kabin.JSON({path: "data"});
+
+console.log("b.x is " + db.b.x);
+console.log("file b is " + raw.b);
+
+console.log("setting c to {x: 1, y: 2}");
+db.c = {x: 1, y: 2};
+
+console.log("c is now " + JSON.stringify(db.c));
+
+console.log("creating new file e in data");
+db.insert('e', {x: 10, y: 20});
+
+console.log("e.y is now", db.e.y);
