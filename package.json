@@ -1,0 +1,11 @@
+{
+  "name": "kabin",
+  "version": "0.0.1",
+  "description": "Simple JSON file database for nodejs",
+  "main": "kabin.js",
+  "keywords": [],
+  "repository" : {
+    "type" : "git",
+    "url" : "git://github.com/tnlogy/kabin.git"
+  }
+}
