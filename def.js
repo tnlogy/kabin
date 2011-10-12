@@ -9,6 +9,7 @@ function def(ds){
   } else {
     k.prototype = function(){};
   }
+  k.prototype.constructor = k;
   for(var p in ds){
     if(sc && sc.prototype[p] && /\b_super\b/.test(ds[p])) {
       k.prototype[p] = (function(sfn, fn){

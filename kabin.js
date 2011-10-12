@@ -6,7 +6,14 @@ kabin.Raw = def({
   init: function (params) {
     this.path = params.path
     var that = this;
-    fs.readdirSync(this.path).forEach(function (dir) { that._defineAttributes(dir); });
+    fs.readdirSync(this.path).forEach(function (name) {
+      var stat = fs.statSync(that.path+"/"+name);
+      if(stat.isFile()) {
+        that._defineAttributes(name);
+      } else if(stat.isDirectory()) {
+        that[name] = new that.constructor({path: that.path+"/"+name});
+      }
+    });
   },
   
   _defineAttributes: function (id) {
@@ -21,6 +28,10 @@ kabin.Raw = def({
   insert: function (name, value) {
     this._defineAttributes(name);
     this[name] = value;
+  },
+  createDir: function (name) {
+    fs.mkdirSync(this.path+"/"+name);
+    this[name] = new this.constructor({path: this.path+"/"+name});
   },
   
   _onSet: function(value) { return value; },
