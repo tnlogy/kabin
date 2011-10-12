@@ -1,0 +1,14 @@
+Simple JSON file database for nodejs
+
+Connect to database (directory at path):
+  var db = new kabin.JSON({path: "data"});
+
+Create new record (file) with:
+  db.insert('e', {x: 10, y: 20});
+
+Read data from file:
+  db.e.x
+  => 10
+
+Write data to file:
+  d.e = {x: 1, y: 2}
