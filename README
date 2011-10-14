@@ -1,14 +1,33 @@
-Simple JSON file database for nodejs
+-- Welcome to Kabin! (alpha warning!)--
 
-Connect to database (directory at path):
-  var db = new kabin.JSON({path: "data"});
+  This is a simple JSON file database for nodejs.
+  The console (examples/prompt.js) has already connected to the sample database.
 
-Create new record (file) with:
-  db.insert('e', {x: 10, y: 20});
+  Connect to a directory at path var db = new kabin.JSON({path: 'data'});
+  Create a new record with db.insert('e', {x: 10, y: 20})
+  Read data from a record with db.e.x => 10
+  Write data to a record with d.e = {x: 1, y: 2}
 
-Read data from file:
-  db.e.x
-  => 10
+  db.migrate() -> migrate to latest version. db.version is the current version.
+  db.migrate({version: x}) -> migrate to version x. up or down depending on current version.
 
-Write data to file:
-  d.e = {x: 1, y: 2}
+  Put a model in db/models. See Recipe.js for an example:
+    {
+      init: function (data) {
+        this.data = data;
+        if(!this.data.saved) { this.data.saved = 0; }
+      },
+      
+      getIngredients: function () {
+        return this.data.ingredients;
+      },
+      
+      onSave: function () {
+        this.data.saved += 1;
+        return this.data;
+      }
+    }
+  A model must have the onSave function which defines what json-data it saves.
+  A JSON file with the field type, will check if such a model exists, and then create it.
+  See db.data.b for an example of a Recipe class instance.
+kabin>
