@@ -1,4 +1,4 @@
-function def(ds){
+module.exports = function def(ds){
   var k = function () { this.init.apply(this, arguments); };
   var sc = false;
   if(ds.extend) {
@@ -26,5 +26,3 @@ function def(ds){
   };
   return k;
 }
-
-exports.def = def;

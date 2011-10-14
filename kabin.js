@@ -1,10 +1,11 @@
-var def = require('./def').def;
+var def = require('./def');
 var fs = require('fs');
 var kabin = exports;
 
 kabin.Raw = def({
   init: function (params) {
     this.path = params.path;
+    this._root = params.root || this;
     this._attributes = [];
     var that = this;
     fs.readdirSync(this.path).forEach(function (name) {
@@ -14,7 +15,7 @@ kabin.Raw = def({
       if(stat.isFile()) {
         that._defineAttributes(name, info);
       } else if(stat.isDirectory()) {
-        that[info.name] = new that.constructor({path: that._pathFor(name)});
+        that[info.name] = new that.constructor({path: that._pathFor(name), root: that._root});
       }
     });
   },
@@ -89,6 +90,12 @@ kabin.Raw = def({
         that.version = version;
       }
     });
+  },
+  
+  getModel: function (name) {
+    var code = this._root.models[name];
+    if(!code) { return false; }
+    return eval("(def("+code+"))");
   }
 });
 
@@ -100,25 +107,28 @@ kabin.JSON = def({
 
   _onSet: function (value, info) {
     var setFunc = info.ext && this["_onSet_" + info.ext];
-    return setFunc ? setFunc(value) : value;
+    return setFunc ? setFunc.call(this, value) : value;
   },
   _onGet: function (value, info) {
     var getFunc = info.ext && this["_onGet_" + info.ext];
-    return getFunc ? getFunc(value) : value;
+    return getFunc ? getFunc.call(this, value) : value;
   },
   
   _onSet_json: function (value) {
-    return JSON.stringify(value);
+    if(typeof(value.onSave) === "function") {
+      return JSON.stringify(value.onSave());
+    } else {
+      return JSON.stringify(value);
+    }
   },
   _onGet_json: function (value) {
-    return JSON.parse(value);
+    var json = JSON.parse(value);
+    var model = json.type && this.getModel(json.type);
+    if(model) {
+      return new model(json);
+    } else {
+      return json;
+    }
   }
 });
-
-
-
-
-
-
-
 
