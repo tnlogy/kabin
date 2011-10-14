@@ -1,6 +1,7 @@
 var kabin = require('../kabin');
-var raw = new kabin.Raw({path: "data"});
 var db = new kabin.JSON({path: "data"});
+
+var raw = new kabin.Raw({path: "data"});
 
 db.b = {x: 1, y: 2};
 console.log("b.x is " + db.b.x);
