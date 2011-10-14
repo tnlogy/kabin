@@ -15,6 +15,7 @@ console.log("    " + db.models.Recipe.split("\n").join("\n    "));
 console.log("  A model must have the onSave function which defines what json-data it saves.");
 console.log("  A JSON file with the field type, will check if such a model exists, and then create it.");
 console.log("  See db.data.b for an example of a Recipe class instance.");
+console.log("  Will probably make the saving more logical.\n  Currently to save changes to db.data.b you need to write db.data.b = db.data.b.\n");
 
 var prompt = require("repl").start("kabin> ");
 prompt.context.db = db;

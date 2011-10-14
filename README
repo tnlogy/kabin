@@ -30,4 +30,7 @@
   A model must have the onSave function which defines what json-data it saves.
   A JSON file with the field type, will check if such a model exists, and then create it.
   See db.data.b for an example of a Recipe class instance.
+  Will probably make the saving more logical.
+  Currently to save changes to db.data.b you need to write db.data.b = db.data.b.
+
 kabin>
