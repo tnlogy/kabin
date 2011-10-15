@@ -95,23 +95,25 @@ kabin.Raw = def({
   getModel: function (name) {
     var code = this._root.models[name];
     if(!code) { return false; }
-    return eval("(def("+code+"))");
+    code = eval("("+code+")");
+    code.extend = kabin.Base;
+    return def(code);
   }
 });
 
 kabin.JSON = def({
   extend: kabin.Raw,
   init: function (params) {
-    this._super(params);
+    this.super(params);
   },
 
   _onSet: function (value, info) {
     var setFunc = info.ext && this["_onSet_" + info.ext];
-    return setFunc ? setFunc.call(this, value) : value;
+    return setFunc ? setFunc.call(this, value, info) : value;
   },
   _onGet: function (value, info) {
     var getFunc = info.ext && this["_onGet_" + info.ext];
-    return getFunc ? getFunc.call(this, value) : value;
+    return getFunc ? getFunc.call(this, value, info) : value;
   },
   
   _onSet_json: function (value) {
@@ -121,14 +123,25 @@ kabin.JSON = def({
       return JSON.stringify(value);
     }
   },
-  _onGet_json: function (value) {
+  _onGet_json: function (value, info) {
     var json = JSON.parse(value);
     var model = json.type && this.getModel(json.type);
     if(model) {
-      return new model(json);
+      var m = new model(json);
+      m.save = this.__lookupSetter__(info.name).bind(this, json);
+      return m;
     } else {
       return json;
     }
   }
 });
 
+kabin.Base = def({
+  init: function (data) {
+    this.data = data;
+  },
+
+  onSave: function () {
+    return this.data;
+  }
+});

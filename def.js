@@ -11,12 +11,12 @@ module.exports = function def(ds){
   }
   k.prototype.constructor = k;
   for(var p in ds){
-    if(sc && sc.prototype[p] && /\b_super\b/.test(ds[p])) {
+    if(sc && sc.prototype[p] && /\bsuper\b/.test(ds[p])) {
       k.prototype[p] = (function(sfn, fn){
         return function() {
-          this._super = sfn;
+          this.super = sfn;
           var res = fn.apply(this, arguments);
-          delete this._super;
+          delete this.super;
           return res;
         };
       })(sc.prototype[p], ds[p]);
